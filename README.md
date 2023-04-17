@@ -1,3 +1,3 @@
 # photo-practice
 
-#click py for code
+click py for code
