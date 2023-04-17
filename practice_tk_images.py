@@ -114,10 +114,6 @@ def colorp_click():
     canvas.draw()
     canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
     
-
-    
-    
-
 #button click to exit
 def button_click():
     exit()
