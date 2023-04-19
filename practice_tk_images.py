@@ -3,7 +3,7 @@ from tkinter import *
 import tkinter as tk
 # import image
 from PIL import ImageTk, Image
-
+import os.path
 
 #drag and drop var
 x_offset = 0
@@ -23,10 +23,15 @@ root.overrideredirect(True)
 #colour
 root.configure(bg='white')
 
-#-----------------------main--------------------------------------------
+#-----------------------main--------------------------------------------  
+color_data = open("colorsave.txt","w")
+color_file = "colorsave.txt"
+
+
+
 def title_bar_function():
     
-    global title_bar,title_label
+    global title_bar,title_label, default_color
     
     #color for the bar
     default_color = '#9BE3F6'
@@ -150,23 +155,23 @@ def image_function():
     global my_img, img_button, arrow_imgR, arrow_imgL, color_imgP, photo_img, photo_img1, photo_img2, photo_img3
     
     #image 
-    my_img = ImageTk.PhotoImage(Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\tooru.jpg"))
+    my_img = ImageTk.PhotoImage(Image.open(r"python_pic\tooru.jpg"))
     my_label = Label(image = my_img, borderwidth =0, highlightbackground="white")
     my_label.grid(row = 2, column = 2, sticky='ew')
         
     #close button
-    img_button = Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\button0.png")
+    img_button = Image.open(r"python_pic\button0.png")
 
     #close resize
     new_size = (100, 30)
     img = img_button.resize(new_size)
 
     #arrow image
-    arrow_imgR =Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\arrow0.png")
-    arrow_imgL =Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\arrow1.png")
+    arrow_imgR =Image.open(r"python_pic\arrow0.png")
+    arrow_imgL =Image.open(r"python_pic\arrow1.png")
 
     #icon color picker
-    color_imgP =Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\iconpaint.png")
+    color_imgP =Image.open(r"python_pic\iconpaint.png")
 
     #resize arrow and color picker
     sqe_size = (30, 30)
