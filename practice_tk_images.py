@@ -4,6 +4,8 @@ import tkinter as tk
 # import image
 from PIL import ImageTk, Image
 
+
+#drag and drop var
 x_offset = 0
 y_offset = 0
 #-------------------root--------------------------------------------------
@@ -40,6 +42,8 @@ def move_app(e):
 def drag_app(e):
     root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
 
+#---------title bar---------
+
 #title bar
 title_bar = Frame(root, bg= default_color,relief ='raised',bd = 0)
 title_bar.grid(row = 0, column = 0,columnspan=4, sticky='ew' )
@@ -48,30 +52,30 @@ title_bar.grid(row = 0, column = 0,columnspan=4, sticky='ew' )
 title_bar.bind('<ButtonPress-1>', move_app)
 title_bar.bind('<B1-Motion>', drag_app)
 
+#title bar color
 title_label = Label(title_bar, text='IMAGE', bg = default_color,fg = 'white')
-#title_label.pack(side = LEFT, pady =4)
 title_label.grid(row = 0, column = 0)
 
-
+#-------image-------
 
 #image 
-my_img = ImageTk.PhotoImage(Image.open(r"D:\emily\Pictures\Saved Pictures\tooru.jpg"))
-my_label = Label(image = my_img, borderwidth =5, highlightbackground="white")
+my_img = ImageTk.PhotoImage(Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\tooru.jpg"))
+my_label = Label(image = my_img, borderwidth =0, highlightbackground="white")
 my_label.grid(row = 2, column = 2, sticky='ew')
 
 #close button
-img_button = Image.open(r"D:\emily\Pictures\Saved Pictures\button0.png")
+img_button = Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\button0.png")
 
 #close resize
 new_size = (100, 30)
 img = img_button.resize(new_size)
 
 #arrow image
-arrow_imgR =Image.open(r"D:\emily\Pictures\Saved Pictures\arrow0.png")
-arrow_imgL =Image.open(r"D:\emily\Pictures\Saved Pictures\arrow1.png")
+arrow_imgR =Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\arrow0.png")
+arrow_imgL =Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\arrow1.png")
 
 #icon color picker
-color_imgP =Image.open(r"D:\emily\Pictures\Saved Pictures\iconpaint.png")
+color_imgP =Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\iconpaint.png")
 
 #resize arrow and color picker
 sqe_size = (30, 30)
@@ -87,61 +91,85 @@ photo_img2 = ImageTk.PhotoImage(img_AL)
 
 photo_img3 = ImageTk.PhotoImage(img_CP)
 
-#color click to reveal bar-------------------------------------------------
+#------color click to reveal bar-------------------------------------------------
+color_picker_enabled = False
+# initialize the bar slider and b_cc button
+bar_slider = None
+b_cc = None
 
 def colorp_click():
-    # update bg colour of b_cc
-    def my_upd(v):
-        red = bar_slider.get()
-        green = 200 - int(int(v) * 0.7)
-        blue = 227 - int(int(v) * 0.3)
+    global color_picker_enabled
+    global bar_slider, b_cc
         
-        #changes color with bar slider
-        color_C = '#{0:02x}{1:02x}{2:02x}'.format(red,green, blue)
-        #changes the var items to the color_C
-        b_cc.config(bg=color_C, text = color_C)
-        bar_slider.config(fg = color_C)
+    if color_picker_enabled == True:
         
-        #title bar
-        title_bar.config (bg = color_C)
-        title_label.config (bg = color_C)
+        # update the state of the variable
+        color_picker_enabled = False
         
-
-    # bar slider
-    bar_slider = Scale(root, from_=255, to=0, orient=HORIZONTAL,
-                   bg='white',
-                   highlightbackground='white',
-                   highlightthickness=1,
-                   fg='#9BE3F6',
-                   font='Arial 13',
-                   troughcolor='white',
-                    length = 150,
-                    width =11,
-                    sliderlength= 30,
-                   command=my_upd)
-
-    bar_slider.grid(row=1, column=2, padx=40, pady=2, sticky='ne')
-    
-    # sets the bar slider to num
-    bar_slider.set(255)
-    
-    # save color
-    def button_color_save():
-        bg_color = b_cc.cget('bg')
+        # destroy the bar slider
+        bar_slider.destroy()
         
-        #overwrites existing text
-        with open("colorsave.txt", "w") as color_data:
-            # save color
-            color_data.write(bg_color)
+        # destroy the save button
+        b_cc.destroy()
         
+    else:
+        
+        # update the state of the variable
+        color_picker_enabled = True
+        
+        # update bg colour of b_cc
+        def my_upd(v):
+            red = bar_slider.get()
+            green = 200 - int(int(v) * 0.7)
+            blue = 227 - int(int(v) * 0.3)
+        
+            #changes color with bar slider
+            color_C = '#{0:02x}{1:02x}{2:02x}'.format(red,green, blue)
+            #changes the var items to the color_C
+            b_cc.config(bg=color_C, text = color_C)
+            bar_slider.config(fg = color_C)
+        
+            #title bar
+            title_bar.config (bg = color_C)
+            title_label.config (bg = color_C)
         
 
-    # button
-    b_cc = Button(root, text='Color', bg='#9BE3F6', font='10', width=8, borderwidth=0, fg = 'white', command = button_color_save)
-    b_cc.grid(row=1, column=2, padx=200, pady=3, sticky='se')
+        # bar slider
+        bar_slider = Scale(root, from_=255, to=0, orient=HORIZONTAL,
+                        bg='white',
+                       highlightbackground='white',
+                       highlightthickness=1,
+                       fg='#9BE3F6',
+                       font='Arial 13',
+                       troughcolor='white',
+                        length = 150,
+                        width =11,
+                        sliderlength= 30,
+                       command=my_upd)
+
+        bar_slider.grid(row=1, column=2, padx=40, pady=2, sticky='ne')
     
-    # update initial background color of button
-    my_upd(0)
+        # sets the bar slider to num
+        bar_slider.set(255)
+    
+        # save color
+        def button_color_save():
+            bg_color = b_cc.cget('bg')
+        
+            #overwrites existing text
+            with open("colorsave.txt", "w") as color_data:
+                # save color
+                color_data.write(bg_color)
+        
+        
+
+        # button
+        b_cc = Button(root, text='Color', bg='#9BE3F6', font='10', width=8, borderwidth=0, fg = 'white', command = button_color_save)
+        b_cc.grid(row=1, column=2, padx=200, pady=3, sticky='se')
+    
+        # update initial background color of button
+        my_upd(0)
+    
 
 #button click to exit
 def button_click():
