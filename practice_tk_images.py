@@ -8,6 +8,7 @@ from PIL import ImageTk, Image
 #drag and drop var
 x_offset = 0
 y_offset = 0
+
 #-------------------root--------------------------------------------------
 root = Tk()
 #name
@@ -23,73 +24,42 @@ root.overrideredirect(True)
 root.configure(bg='white')
 
 #-----------------------main--------------------------------------------
-#color for the bar
-default_color = '#9BE3F6'
+def title_bar_function():
+    
+    global title_bar,title_label
+    
+    #color for the bar
+    default_color = '#9BE3F6'
 
-#reading color data from the file
-with open("colorsave.txt","r") as color_data_r:
-    # read the color data from the file
-    color_data_RC = color_data_r.readline().strip()
-    default_color = color_data_RC
+    #reading color data from the file
+    with open("colorsave.txt","r") as color_data_r:
+        # read the color data from the file
+        color_data_RC = color_data_r.readline().strip()
+        default_color = color_data_RC
 
-#drag and drop
-def move_app(e):
-    global x_offset, y_offset
-    x_offset = e.x
-    y_offset = e.y
-    root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
+    #drag and drop
+    def move_app(e):
+        global x_offset, y_offset
+        x_offset = e.x
+        y_offset = e.y
+        root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
 
-def drag_app(e):
-    root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
+    def drag_app(e):
+        root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
 
-#---------title bar---------
+    #---------title bar---------
 
-#title bar
-title_bar = Frame(root, bg= default_color,relief ='raised',bd = 0)
-title_bar.grid(row = 0, column = 0,columnspan=4, sticky='ew' )
+    #title bar
+    title_bar = Frame(root, bg= default_color,relief ='raised',bd = 0)
+    title_bar.grid(row = 0, column = 0,columnspan=4, sticky='ew' )
 
-#bind title bar drag
-title_bar.bind('<ButtonPress-1>', move_app)
-title_bar.bind('<B1-Motion>', drag_app)
+    #bind title bar drag
+    title_bar.bind('<ButtonPress-1>', move_app)
+    title_bar.bind('<B1-Motion>', drag_app)
 
-#title bar color
-title_label = Label(title_bar, text='IMAGE', bg = default_color,fg = 'white')
-title_label.grid(row = 0, column = 0)
-
-#-------image-------
-
-#image 
-my_img = ImageTk.PhotoImage(Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\tooru.jpg"))
-my_label = Label(image = my_img, borderwidth =0, highlightbackground="white")
-my_label.grid(row = 2, column = 2, sticky='ew')
-
-#close button
-img_button = Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\button0.png")
-
-#close resize
-new_size = (100, 30)
-img = img_button.resize(new_size)
-
-#arrow image
-arrow_imgR =Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\arrow0.png")
-arrow_imgL =Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\arrow1.png")
-
-#icon color picker
-color_imgP =Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\iconpaint.png")
-
-#resize arrow and color picker
-sqe_size = (30, 30)
-img_AR = arrow_imgR.resize(sqe_size)
-img_AL = arrow_imgL.resize(sqe_size)
-img_CP = color_imgP.resize(sqe_size)
-
-#convert resize image to tkinter object
-photo_img = ImageTk.PhotoImage(img)
-
-photo_img1 = ImageTk.PhotoImage(img_AR)
-photo_img2 = ImageTk.PhotoImage(img_AL)
-
-photo_img3 = ImageTk.PhotoImage(img_CP)
+    #title bar color
+    title_label = Label(title_bar, text='IMAGE', bg = default_color,fg = 'white')
+    title_label.grid(row = 0, column = 0)
 
 #------color click to reveal bar-------------------------------------------------
 color_picker_enabled = False
@@ -98,9 +68,8 @@ bar_slider = None
 b_cc = None
 
 def colorp_click():
-    global color_picker_enabled
-    global bar_slider, b_cc
-        
+    global color_picker_enabled, bar_slider, b_cc
+
     if color_picker_enabled == True:
         
         # update the state of the variable
@@ -119,6 +88,7 @@ def colorp_click():
         
         # update bg colour of b_cc
         def my_upd(v):
+            global color_C
             red = bar_slider.get()
             green = 200 - int(int(v) * 0.7)
             blue = 227 - int(int(v) * 0.3)
@@ -169,26 +139,67 @@ def colorp_click():
     
         # update initial background color of button
         my_upd(0)
+
+#-------image-------
+def image_function():
     
-
-#button click to exit
-def button_click():
-    exit()
+    #button click to exit
+    def button_click():
+            exit()
+    #use global to allow access
+    global my_img, img_button, arrow_imgR, arrow_imgL, color_imgP, photo_img, photo_img1, photo_img2, photo_img3
     
-#---------------------------------buttons------------------------------------------
-#exit button look with the command of button_click
-button_quit = Button(root, image=photo_img, command=button_click, width=100, height=30, borderwidth=0, highlightthickness=0, bg="white")
-button_quit.grid(row = 3, column = 2, padx = 1, pady =5)
+    #image 
+    my_img = ImageTk.PhotoImage(Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\tooru.jpg"))
+    my_label = Label(image = my_img, borderwidth =0, highlightbackground="white")
+    my_label.grid(row = 2, column = 2, sticky='ew')
+        
+    #close button
+    img_button = Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\button0.png")
 
-#arrow button
-button_AR = Button(root, image=photo_img1, command=button_click, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
-button_AR.grid(row = 3, column = 2, padx = 50, pady =5,sticky='e')
+    #close resize
+    new_size = (100, 30)
+    img = img_button.resize(new_size)
 
-button_AL = Button(root, image=photo_img2, command=button_click, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
-button_AL.grid(row = 3, column = 2, padx = 50, pady =5, sticky='w')
+    #arrow image
+    arrow_imgR =Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\arrow0.png")
+    arrow_imgL =Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\arrow1.png")
 
-#color button
-button_CP = Button(root, image=photo_img3, command=colorp_click, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
-button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='ne')
+    #icon color picker
+    color_imgP =Image.open(r"D:\emily\Pictures\Saved Pictures\python pic\iconpaint.png")
 
+    #resize arrow and color picker
+    sqe_size = (30, 30)
+    img_AR = arrow_imgR.resize(sqe_size)
+    img_AL = arrow_imgL.resize(sqe_size)
+    img_CP = color_imgP.resize(sqe_size)
+
+    #convert resize image to tkinter object
+    photo_img = ImageTk.PhotoImage(img)
+
+    photo_img1 = ImageTk.PhotoImage(img_AR)
+    photo_img2 = ImageTk.PhotoImage(img_AL)
+
+    photo_img3 = ImageTk.PhotoImage(img_CP)
+        
+    #---------------------------------buttons------------------------------------------
+        
+    #exit button look with the command of button_click
+    button_quit = Button(root, image= photo_img, command=button_click, width=100, height=30, borderwidth=0, highlightthickness=0, bg="white")
+    button_quit.grid(row = 3, column = 2, padx = 1, pady =5)
+
+    #arrow button
+    button_AR = Button(root, image= photo_img1, command=button_click, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
+    button_AR.grid(row = 3, column = 2, padx = 50, pady =5,sticky='e')
+
+    button_AL = Button(root, image= photo_img2, command=button_click, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
+    button_AL.grid(row = 3, column = 2, padx = 50, pady =5, sticky='w')
+
+    #color button
+    button_CP = Button(root, image= photo_img3, command=colorp_click, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
+    button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='ne')
+
+# functions
+title_bar_function()
+image_function()
 root.mainloop()
