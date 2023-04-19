@@ -14,9 +14,6 @@ root = Tk()
 #name
 root.title('pictures')
 
-#icon 
-root.iconbitmap(r'D:\emily\Documents\customize\folder icons\logo.ico')
-
 #remove title
 root.overrideredirect(True)
 
