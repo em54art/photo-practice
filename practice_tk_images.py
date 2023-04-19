@@ -4,12 +4,6 @@ import tkinter as tk
 # import image
 from PIL import ImageTk, Image
 
-#colour bar
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import numpy as np
-
 x_offset = 0
 y_offset = 0
 #-------------------root--------------------------------------------------
@@ -27,7 +21,16 @@ root.overrideredirect(True)
 root.configure(bg='white')
 
 #-----------------------main--------------------------------------------
-#function move_app, check binding for more info
+#color for the bar
+default_color = '#9BE3F6'
+
+#reading color data from the file
+with open("colorsave.txt","r") as color_data_r:
+    # read the color data from the file
+    color_data_RC = color_data_r.readline().strip()
+    default_color = color_data_RC
+
+#drag and drop
 def move_app(e):
     global x_offset, y_offset
     x_offset = e.x
@@ -37,16 +40,15 @@ def move_app(e):
 def drag_app(e):
     root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
 
-
 #title bar
-title_bar = Frame(root, bg='#9BE3F6',relief ='raised',bd = 0)
+title_bar = Frame(root, bg= default_color,relief ='raised',bd = 0)
 title_bar.grid(row = 0, column = 0,columnspan=4, sticky='ew' )
 
 #bind title bar drag
 title_bar.bind('<ButtonPress-1>', move_app)
 title_bar.bind('<B1-Motion>', drag_app)
 
-title_label = Label(title_bar, text='IMAGE', bg ='#9BE3F6',fg = 'white')
+title_label = Label(title_bar, text='IMAGE', bg = default_color,fg = 'white')
 #title_label.pack(side = LEFT, pady =4)
 title_label.grid(row = 0, column = 0)
 
@@ -88,32 +90,59 @@ photo_img3 = ImageTk.PhotoImage(img_CP)
 #color click to reveal bar-------------------------------------------------
 
 def colorp_click():
-    
-    #use tkinter slider for function and look
-    # create a new frame to hold the colorbar
-    colorbar_frame = tk.Frame(root)
-    colorbar_frame.grid(row=1, column=2, padx=40, pady=4, sticky='ne')
-    
+    # update bg colour of b_cc
+    def my_upd(v):
+        red = bar_slider.get()
+        green = 200 - int(int(v) * 0.7)
+        blue = 227 - int(int(v) * 0.3)
+        
+        #changes color with bar slider
+        color_C = '#{0:02x}{1:02x}{2:02x}'.format(red,green, blue)
+        #changes the var items to the color_C
+        b_cc.config(bg=color_C, text = color_C)
+        bar_slider.config(fg = color_C)
+        
+        #title bar
+        title_bar.config (bg = color_C)
+        title_label.config (bg = color_C)
+        
 
+    # bar slider
+    bar_slider = Scale(root, from_=255, to=0, orient=HORIZONTAL,
+                   bg='white',
+                   highlightbackground='white',
+                   highlightthickness=1,
+                   fg='#9BE3F6',
+                   font='Arial 13',
+                   troughcolor='white',
+                    length = 150,
+                    width =11,
+                    sliderlength= 30,
+                   command=my_upd)
 
-    #create a figure and axes for the color bar (size)
-    fig, ax = plt.subplots(figsize=(3, 0.3))
+    bar_slider.grid(row=1, column=2, padx=40, pady=2, sticky='ne')
+    
+    # sets the bar slider to num
+    bar_slider.set(255)
+    
+    # save color
+    def button_color_save():
+        bg_color = b_cc.cget('bg')
+        
+        #overwrites existing text
+        with open("colorsave.txt", "w") as color_data:
+            # save color
+            color_data.write(bg_color)
+        
+        
 
-    cmap = mpl.cm.cool
+    # button
+    b_cc = Button(root, text='Color', bg='#9BE3F6', font='10', width=8, borderwidth=0, fg = 'white', command = button_color_save)
+    b_cc.grid(row=1, column=2, padx=200, pady=3, sticky='se')
+    
+    # update initial background color of button
+    my_upd(0)
 
-    cbar= fig.colorbar(mpl.cm.ScalarMappable(cmap=cmap),
-                cax=ax, orientation='horizontal', label='Some Units')
-    
-    #removes outline
-    cbar.outline.set_edgecolor('None')
-    
-    ax.tick_params(axis='both', which='both', length=0, labelbottom=False, labeltop=False,
-                   labelleft=False, labelright=False)
-    # create a new canvas to display the colorbar
-    canvas = FigureCanvasTkAgg(fig, master=colorbar_frame)
-    canvas.draw()
-    canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
-    
 #button click to exit
 def button_click():
     exit()
