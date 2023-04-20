@@ -165,7 +165,7 @@ def image_function():
             exit()
     #use global to allow access
     global my_img0, img_button, arrow_imgR, arrow_imgL, color_imgP, photo_img, photo_img1, photo_img2, photo_img3
-    global my_label,current_index
+    global my_label,current_index, photo_img4
     
     
     #image for slider
@@ -222,18 +222,23 @@ def image_function():
 
     #icon color picker
     color_imgP =Image.open(r"python_pic\iconpaint.png")
+    
+    #icon dragdrop
+    dragdrop_img = Image.open(r"python_pic\dragdropB.png")
 
     #resize arrow and color picker
     sqe_size = (30, 30)
     img_AR = arrow_imgR.resize(sqe_size)
     img_AL = arrow_imgL.resize(sqe_size)
     img_CP = color_imgP.resize(sqe_size)
+    img_DD = dragdrop_img.resize(sqe_size)
 
     #convert resize image to tkinter object
     photo_img1 = ImageTk.PhotoImage(img_AR)
     photo_img2 = ImageTk.PhotoImage(img_AL)
 
     photo_img3 = ImageTk.PhotoImage(img_CP)
+    photo_img4 = ImageTk.PhotoImage(img_DD)
         
     #---------------------------------buttons------------------------------------------
         
@@ -256,6 +261,10 @@ def image_function():
     #color button
     button_CP = Button(root, image= photo_img3, command=colorp_click, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
     button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='ne')
+    
+    #dragdrop button
+    button_CP = Button(root, image= photo_img4, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
+    button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='nw')
 
 # functions
 image_function()
