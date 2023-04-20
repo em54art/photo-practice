@@ -3,7 +3,8 @@ from tkinter import *
 import tkinter as tk
 # import image
 from PIL import ImageTk, Image
-import os.path
+import os
+import re
 
 #drag and drop var
 x_offset = 0
@@ -21,9 +22,23 @@ root.overrideredirect(True)
 root.configure(bg='white')
 
 #-----------------------main--------------------------------------------  
-
+color_file = "colorsave.txt"
 #color for the bar
 default_color = '#9BE3F6'
+
+if os.path.isfile(color_file) and os.path.getsize(color_file) > 0:
+    with open(color_file, "r") as f:
+        color = f.readline().strip()
+        if not color or not re.match(r'^#[0-9a-fA-F]{6}$', color):
+            # Default color if the file is empty or doesn't contain a valid color code
+            color = default_color
+else:
+    # Default color if the file doesn't exist
+    color = default_color
+    if not os.path.exists(color_file):
+        with open(color_file, "w") as f:
+            f.write(color)
+
 
 #reading color data from the file
 with open("colorsave.txt","r") as color_data_r:
