@@ -164,35 +164,57 @@ def image_function():
     def button_click():
             exit()
     #use global to allow access
-    global my_img0, img_button, arrow_imgR, arrow_imgL, color_imgP, photo_img, photo_img1, photo_img2, photo_img3,my_label
+    global my_img0, img_button, arrow_imgR, arrow_imgL, color_imgP, photo_img, photo_img1, photo_img2, photo_img3
+    global my_label,current_index
     
     #image for slider
     my_img0 = ImageTk.PhotoImage(Image.open(r"python_pic\tooru.jpg"))
     my_img1 = ImageTk.PhotoImage(Image.open(r"python_pic\바요.Tobio.png"))
+    my_img2 = ImageTk.PhotoImage(Image.open(r"python_pic\cat.png"))
     
     #img S show
     my_label = Label(image = my_img0, borderwidth =0, highlightbackground="white")
     my_label.grid(row = 2, column = 2, sticky='ew')
         
     #img list
-    image_list = [my_img0, my_img1]
+    image_list = [my_img0, my_img1,my_img2]
+    
+    # Initialize current index to 0
+    current_index = 0
     
     def forward():
-        global button_AR,button_AL,my_label
+    
+        global current_index, button_AR, button_AL, my_label
         
+        # Increment current index
+        current_index += 1
+        
+        # Wrap around to beginning if at end of list
+        if current_index >= len(image_list):
+            current_index = 0
+        
+        # Update label with new image
         my_label.grid_forget()
-        my_label = Label(image = image_list[+1])
-        my_label.grid(row = 2, column = 2, sticky='ew')
-        
-        
-        print('forward')
+        my_label = Label(image=image_list[current_index], borderwidth=0, highlightbackground="white")
+        my_label.grid(row=2, column=2, sticky='ew')
         
     
     def back():
-        global button_AR,button_AL,my_label
-        print('back')
+        global current_index, button_AR, button_AL, my_label
         
-    
+        # Increment current index
+        current_index -= 1
+        
+        # Wrap around to beginning if at end of list
+        if current_index >= len(image_list):
+            current_index = 0
+        
+        # Update label with new image
+        my_label.grid_forget()
+        my_label = Label(image=image_list[current_index], borderwidth=0, highlightbackground="white")
+        my_label.grid(row=2, column=2, sticky='ew')
+        
+
     #arrow image
     arrow_imgR =Image.open(r"python_pic\arrow0.png")
     arrow_imgL =Image.open(r"python_pic\arrow1.png")
