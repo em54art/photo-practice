@@ -142,7 +142,7 @@ def colorp_click():
     
         # save color
         def button_color_save():
-            bg_color = b_cc.cget('bg')
+            bg_color = b_cc.cget('fg_color')
         
             #overwrites existing text
             with open("colorsave.txt", "w") as color_data:
@@ -167,21 +167,22 @@ def image_function():
     global my_img0, img_button, arrow_imgR, arrow_imgL, color_imgP, photo_img, photo_img1, photo_img2, photo_img3
     global my_label,current_index
     
+    
     #image for slider
-    my_img0 = ImageTk.PhotoImage(Image.open(r"python_pic\tooru.jpg"))
-    my_img1 = ImageTk.PhotoImage(Image.open(r"python_pic\바요.Tobio.png"))
-    my_img2 = ImageTk.PhotoImage(Image.open(r"python_pic\cat.png"))
+    my_img0 = ImageTk.PhotoImage(Image.open(r"python_pic\tooru.jpg").resize((500, 500)))
+    my_img1 = ImageTk.PhotoImage(Image.open(r"python_pic\바요.Tobio.png").resize((500, 500)))
     
     #img S show
     my_label = Label(image = my_img0, borderwidth =0, highlightbackground="white")
     my_label.grid(row = 2, column = 2, sticky='ew')
         
     #img list
-    image_list = [my_img0, my_img1,my_img2]
+    image_list = [my_img0, my_img1]
     
     # Initialize current index to 0
     current_index = 0
     
+    #next arrowR code
     def forward():
     
         global current_index, button_AR, button_AL, my_label
@@ -198,7 +199,7 @@ def image_function():
         my_label = Label(image=image_list[current_index], borderwidth=0, highlightbackground="white")
         my_label.grid(row=2, column=2, sticky='ew')
         
-    
+    #back arrowL code
     def back():
         global current_index, button_AR, button_AL, my_label
         
