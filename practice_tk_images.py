@@ -21,47 +21,39 @@ root.overrideredirect(True)
 root.configure(bg='white')
 
 #-----------------------main--------------------------------------------  
-color_data = open("colorsave.txt","w")
-color_file = "colorsave.txt"
 
+#color for the bar
+default_color = '#9BE3F6'
 
+#reading color data from the file
+with open("colorsave.txt","r") as color_data_r:
+    # read the color data from the file
+    color_data_RC = color_data_r.readline().strip()
+    default_color = color_data_RC
 
-def title_bar_function():
-    
-    global title_bar,title_label, default_color
-    
-    #color for the bar
-    default_color = '#9BE3F6'
+#drag and drop
+def move_app(e):
+    global x_offset, y_offset
+    x_offset = e.x
+    y_offset = e.y
+    root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
 
-    #reading color data from the file
-    with open("colorsave.txt","r") as color_data_r:
-        # read the color data from the file
-        color_data_RC = color_data_r.readline().strip()
-        default_color = color_data_RC
+def drag_app(e):
+    root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
 
-    #drag and drop
-    def move_app(e):
-        global x_offset, y_offset
-        x_offset = e.x
-        y_offset = e.y
-        root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
+#---------title bar---------
 
-    def drag_app(e):
-        root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
+#title bar
+title_bar = Frame(root, bg= default_color,relief ='raised',bd = 0)
+title_bar.grid(row = 0, column = 0,columnspan=4, sticky='ew' )
 
-    #---------title bar---------
+#bind title bar drag
+title_bar.bind('<ButtonPress-1>', move_app)
+title_bar.bind('<B1-Motion>', drag_app)
 
-    #title bar
-    title_bar = Frame(root, bg= default_color,relief ='raised',bd = 0)
-    title_bar.grid(row = 0, column = 0,columnspan=4, sticky='ew' )
-
-    #bind title bar drag
-    title_bar.bind('<ButtonPress-1>', move_app)
-    title_bar.bind('<B1-Motion>', drag_app)
-
-    #title bar color
-    title_label = Label(title_bar, text='IMAGE', bg = default_color,fg = 'white')
-    title_label.grid(row = 0, column = 0)
+#title bar color
+title_label = Label(title_bar, text='IMAGE', bg = default_color,fg = 'white')
+title_label.grid(row = 0, column = 0)
 
 #------color click to reveal bar-------------------------------------------------
 color_picker_enabled = False
@@ -202,6 +194,5 @@ def image_function():
     button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='ne')
 
 # functions
-title_bar_function()
 image_function()
 root.mainloop()
