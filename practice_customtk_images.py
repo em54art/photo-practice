@@ -34,7 +34,7 @@ if os.path.isfile(color_file) and os.path.getsize(color_file) > 0:
             # Default color if the file is empty or doesn't contain a valid color code
             color = default_color
 
-# If the file doesn't exist or is empty, create the file with the default color
+# file doesn't exist, create the file with the default color
 else:
     # Default color if the file doesn't exist
     color = default_color
@@ -150,7 +150,6 @@ def colorp_click():
                 color_data.write(bg_color)
         
         # button
-        #b_cc = Button(root, text='Color', bg='#9BE3F6', font='10', width=8, borderwidth=0, fg = 'white', command = button_color_save)
         b_cc = customtkinter.CTkButton(root, text='Color',fg_color ='white',height = 25,width = 70, command = button_color_save)
         b_cc.grid(row=1, column=2, padx=155, pady=3, sticky='e')
     
@@ -163,6 +162,7 @@ def image_function():
     #button click to exit
     def button_click():
             exit()
+            
     #use global to allow access
     global my_img0, img_button, arrow_imgR, arrow_imgL, color_imgP, photo_img, photo_img1, photo_img2, photo_img3
     global my_label,current_index, photo_img4
