@@ -3,8 +3,10 @@ from tkinter import *
 import customtkinter
 # import image
 from PIL import ImageTk, Image, ImageOps
+from pathlib import Path
 import os
 import re
+from tkinter import filedialog
 
 #drag and drop var
 x_offset = 0
@@ -156,7 +158,6 @@ def colorp_click():
                 color_data.write(bg_color)
         
         # button
-        #b_cc = Button(root, text='Color', bg='#9BE3F6', font='10', width=8, borderwidth=0, fg = 'white', command = button_color_save)
         b_cc = customtkinter.CTkButton(root, text='Color',fg_color ='white',height = 25,width = 70, command = button_color_save)
         b_cc.grid(row=1, column=2, padx=155, pady=3, sticky='e')
     
@@ -200,17 +201,20 @@ def arrow_button():
     def back():
         global current_index, button_AR, button_AL, my_label
         
-        # Increment current index
+        # reduce current index
         current_index -= 1
         
         # Wrap around to beginning if at end of list
         if current_index >= len(resized_images):
             current_index = 0
         
+        print(current_index)
         # Update label with new image
         my_label.grid_forget()
         my_label = Label(image=resized_images[current_index], borderwidth=0, highlightbackground="white")
         my_label.grid(row=2, column=2, sticky='ew')
+        
+        current_index = resized_images.index(resized_images[current_index])
         
     #arrow button
     button_AR = Button(root, image= photo_img1, command=forward, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
@@ -218,40 +222,20 @@ def arrow_button():
 
     button_AL = Button(root, image= photo_img2, command=back, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
     button_AL.grid(row = 3, column = 2, padx = 50, pady =5, sticky='w')
+    
+
      
 
 #-------image-------
 def image_function():
     
     #use global to allow access
-    global  img_button, color_imgP, photo_img,my_img0, photo_img3
-    global my_label,current_index,photo_img5,my_label0,sqe_size,resized_images
+    global color_imgP,photo_img3
     
     #button click to exit
     def button_click():
             exit()
-    
-    #image for slider
-    img_paths = ["python_pic/tooru.jpg", "python_pic/바요.Tobio.png", "python_pic/iwazumi cute.png"]
-    
-    # Initialize a list to store the resized images
-    resized_images = []
-    
-    # size
-    target_size = (500, 500)
-    
-    #add resize 500,500 and add to array
-    for path in img_paths:
-        img = Image.open(path)
-        img = img.resize(target_size)
-        resized_images.append(ImageTk.PhotoImage(img))
-    
-    # Initialize current index to 0
-    current_index = 0
-    
-    #img shown
-    my_label = Label(image = resized_images[current_index], borderwidth =0, highlightbackground="white")
-    my_label.grid(row = 2, column = 2, sticky='ew')
+
     
     #icon color picker
     color_imgP =Image.open(r"python_pic\iconpaint.png")
@@ -279,38 +263,128 @@ def image_function():
     #color button
     button_CP = Button(root, image= photo_img3, command=colorp_click, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
     button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='ne')
+    return resized_images
+
+DragAndDrop_enabled = False
+my_label0 = None
 
 def DragAndDrop_Img():
-    global photo_img4
+    global photo_img4, DragAndDrop_enabled, my_label0
     
-    def DragandDropImg():
-        #image
-        my_img0 =Image.open(r"python_pic\dragdrop.png")
-        photo_img5 = ImageTk.PhotoImage(my_img0)
+    if DragAndDrop_enabled == True :
         
-        #rids of my_label
-        my_label.grid_forget()
+        # update the state of the variable
+        DragAndDrop_enabled = False
         
-        #adds temp img
-        my_label0 = Label(image= photo_img5, borderwidth=0, highlightbackground="white")
-        my_label0.grid(row=2, column=2, sticky='ew')
+        my_label0.destroy()
+        button.destroy()
+        label_file_explorer.destroy()
+        frame1.destroy()
         
-        # Add reference to prevent garbage collection
-        my_label0.image = photo_img5
-    
-    #icon dragdrop
-    dragdrop_img = Image.open(r"python_pic\dragdropB.png")
-    sqe_size = (30, 30)
-    img_DD = dragdrop_img.resize(sqe_size)
-    photo_img4 = ImageTk.PhotoImage(img_DD)
-    
-    #dragdrop button
-    button_CP = Button(root, image= photo_img4,command =DragandDropImg, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
-    button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='nw')
-    
+    else:
+        DragAndDrop_enabled = True
+        
+        example()
 
+        
+#icon dragdrop
+dragdrop_img = Image.open(r"python_pic\dragdropB.png")
+sqe_size = (30, 30)
+img_DD = dragdrop_img.resize(sqe_size)
+photo_img4 = ImageTk.PhotoImage(img_DD)
+
+#dragdrop button
+button_CP = Button(root, image= photo_img4,command = DragAndDrop_Img, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
+button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='nw')
+    
+#browse folder
+def example():
+    global label_file_explorer,my_label0,button,label_file_explorer,frame1
+    
+    target_size = (500,500)
+    
+    #image
+    my_img0 =Image.open(r"python_pic\background.png")
+    img5 = my_img0.resize(target_size)
+    photo_img5 = ImageTk.PhotoImage(img5)
+    
+    #adds temp img
+    my_label0 = Label(image= photo_img5, borderwidth=0, highlightbackground="white")
+    my_label0.grid(row=2, column=2, sticky='ew')
+    
+    # Add reference to prevent garbage collection
+    my_label0.image = photo_img5
+    # Create Frame
+    frame1 = Frame(root, background='white')
+    frame1.grid(row=2, column=2 )
+         
+    #button
+    button = customtkinter.CTkButton(frame1, text="Browse files",width=140, height=30,
+                                          border_color = '#9BE3F6', border_width = 2,
+                                          fg_color = 'white',
+                                          text_color = '#9BE3F6',
+                                          hover = False,command = browseFiles)
+    button.grid(row=1, column=1)
+    
+    # Create a File Explorer label
+    label_file_explorer = Label(frame1,
+                                text = "File Explorer using Tkinter",
+                                width = 65, height = 4,
+                                fg ="#9BE3F6", bg = 'white')
+    label_file_explorer.grid(row=2, column=1)
+
+listchange = False 
+#image for slider
+img_paths = ["python_pic/tooru.jpg", "python_pic/바요.Tobio.png", "python_pic/iwazumi cute.png"]
+img_paths2 = []
+
+# Function for opening the file explorer window
+def browseFiles():
+    
+    listchange= True 
+    #check for folder
+    filename = filedialog.askdirectory()
+    #dir_list = os.listdir(filename)
+    
+    for root, dirs, files in os.walk(filename):
+        for file in files:
+            path = os.path.join(root, file)
+            normalise = os.path.normpath(path)
+            
+            img_paths.append(normalise)
+    
+    image_insert()
+
+
+    
+def image_insert():
+    global  img_button, color_imgP, photo_img,my_img0, photo_img3
+    global my_label,current_index,photo_img5,my_label0,sqe_size,resized_images
+    
+    
+    # Initialize a list to store the resized images
+    resized_images = []
+    
+    # size
+    target_size = (500, 500)
+    
+    #add resize 500,500 and add to array
+    for path in img_paths:
+        img = Image.open(path)
+        #optimise
+        img = img.resize(target_size)
+        resized_images.append(ImageTk.PhotoImage(img))
+    
+    # Initialize current index to 0
+    current_index = 0
+    
+    #img shown
+    my_label = Label(image = resized_images[current_index], borderwidth =0, highlightbackground="white")
+    my_label.grid(row = 2, column = 2, sticky='ew')
+
+    
 # functions
+image_insert()
 arrow_button()
-DragAndDrop_Img()
 image_function()
 root.mainloop()
