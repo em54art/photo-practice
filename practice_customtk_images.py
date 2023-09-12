@@ -22,7 +22,7 @@ root.overrideredirect(True)
 root.configure(fg_color='white')
 
 #resize window
-root.geometry("400x510")
+#root.geometry("400x510")
 #------------------to do
 '''
 create pop window to view images and to place in
@@ -336,26 +336,29 @@ def example():
 listchange = False 
 #image for slider
 img_paths = ["python_pic/tooru.jpg", "python_pic/바요.Tobio.png", "python_pic/iwazumi cute.png"]
-img_paths2 = []
+
 
 # Function for opening the file explorer window
 def browseFiles():
     
     listchange= True 
-    #check for folder
     filename = filedialog.askdirectory()
-    #dir_list = os.listdir(filename)
+    file_format = ['.png','.jpg','.webp']
+    
     
     for root, dirs, files in os.walk(filename):
         for file in files:
             path = os.path.join(root, file)
             normalise = os.path.normpath(path)
             
+            #filtering out
+            fileType = normalise[-4]+normalise[-3]+normalise[-2]+normalise[-1]
+            if fileType not in file_format:
+                continue
+            
             img_paths.append(normalise)
     
     image_insert()
-
-
     
 def image_insert():
     global  img_button, color_imgP, photo_img,my_img0, photo_img3
