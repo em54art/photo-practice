@@ -1,8 +1,18 @@
 # photo-practice
 
-Use customtk.
-Click py for code.
+<h3>what does the software do?</h3>
 
-Added browse folder function for the button on the top left hand.
+<p>This software is a photo slider application that UI is customisable.</p>
 
-Colorsave txt file is no longer needed for the code to work.
+<h3>How to run it in the current version?</h3>
+
+<p>have CustomTkinter installed in the python version<br>
+https://customtkinter.tomschimansky.com/documentation/<br>
+for installation and documentation</p>
+
+<h3>what can the software do?</h3>
+<ul>
+    <li>use the arrows to move back and forth through images</li>
+    <li>change title bar colour and save colour to notepad </li>
+    <li>browse for folder and import into software</li>
+</ul>
