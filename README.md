@@ -1,6 +1,6 @@
 # photo-practice
 
-<h3>what does the software do?</h3>
+<h3>What does the software do?</h3>
 
 <p>This software is a photo slider application that UI is customisable.</p>
 
@@ -10,7 +10,7 @@
 https://customtkinter.tomschimansky.com/documentation/<br>
 for installation and documentation</p>
 
-<h3>what can the software do?</h3>
+<h3>What can the software do?</h3>
 <ul>
     <li>use the arrows to move back and forth through images</li>
     <li>change title bar colour and save colour to notepad </li>
