@@ -18,6 +18,6 @@ for installation and documentation</p>
 </ul>
 
 <h3>Purpose of the program</h3>
-<p>the purpose of this program is to learn the python language.<br>
+<p>The purpose of this program is to learn the python language.<br>
 To gain experience in finishing a project.
 </p>
