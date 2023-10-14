@@ -21,3 +21,11 @@ for installation and documentation</p>
 <p>The purpose of this program is to learn the python language.<br>
 To gain experience in finishing a project.
 </p>
+
+<h3>plans to add</h3>
+<ul>
+    <li>resize window</li>
+    <li>proper image resize (no static resize)</li>
+    <li>progress bar when importing images</li>
+    <li>saving directory for images (rewriting the file system for importing)</li>
+</ul>
