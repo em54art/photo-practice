@@ -20,13 +20,6 @@ root.overrideredirect(True)
 
 #colour
 root.configure(fg_color='white')
-
-#resize window
-#root.geometry("400x510")
-#------------------to do
-'''
-create pop window to view images and to place in
-'''
 #-----------------------file information--------------------------------------------  
 
 color_file = "colorsave.txt"
@@ -208,7 +201,6 @@ def arrow_button():
         if current_index >= len(resized_images):
             current_index = 0
         
-        print(current_index)
         # Update label with new image
         my_label.grid_forget()
         my_label = Label(image=resized_images[current_index], borderwidth=0, highlightbackground="white")
