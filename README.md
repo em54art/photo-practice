@@ -24,8 +24,6 @@ To gain experience in finishing a project.
 
 <h3>plans to add</h3>
 <ul>
-    <li>resize window</li>
     <li>proper image resize (no static resize)</li>
-    <li>progress bar when importing images</li>
-    <li>saving directory for images (rewriting the file system for importing)</li>
+    <li>import function that needs less time to import large amounts of data</li>
 </ul>
