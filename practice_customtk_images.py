@@ -15,11 +15,16 @@ y_offset = 0
 #-------------------root--------------------------------------------------
 root = customtkinter.CTk()
 
+#resize
+root.resizable(True, True)
+
 #remove title
 root.overrideredirect(True)
 
 #colour
 root.configure(fg_color='white')
+
+
 #-----------------------file information--------------------------------------------  
 
 color_file = "colorsave.txt"
@@ -272,10 +277,10 @@ def DragAndDrop_Img():
         button.destroy()
         label_file_explorer.destroy()
         frame1.destroy()
-        
+        print('true')        
     else:
         DragAndDrop_enabled = True
-        
+        print('false')
         example()
 
         
@@ -284,17 +289,16 @@ dragdrop_img = Image.open(r"python_pic\dragdropB.png")
 sqe_size = (30, 30)
 img_DD = dragdrop_img.resize(sqe_size)
 photo_img4 = ImageTk.PhotoImage(img_DD)
-
+#something is wrong with the button when clicking browse, something to do with skipping the changing to false
 #dragdrop button
 button_CP = Button(root, image= photo_img4,command = DragAndDrop_Img, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
 button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='nw')
-    
+
 #browse folder
 def example():
     global label_file_explorer,my_label0,button,label_file_explorer,frame1
-    
     target_size = (500,500)
-    
+
     #image
     my_img0 =Image.open(r"python_pic\background.png")
     img5 = my_img0.resize(target_size)
@@ -325,19 +329,75 @@ def example():
                                 fg ="#9BE3F6", bg = 'white')
     label_file_explorer.grid(row=2, column=1)
 
-listchange = False 
-#image for slider
-img_paths = ["python_pic/tooru.jpg", "python_pic/바요.Tobio.png", "python_pic/iwazumi cute.png"]
+
+#direct path (unsure if needed)
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname,'default_pics')
+
+#add name after default pic dir and insert into img array
+
+#name of txt
+direc = "direct.txt"
+
+#info in txt, if new
+direc_default = f"{filename}"
+
+#read from notepad and insert into img path
+def checkFolderDir():
+
+    #check if notepad exists, if not then add and write else check in notepad if path is correct and replace. 
+    #only checks for notepad existance
+    if os.path.isfile(direc) and os.path.getsize(direc) > 0:
+        with open(direc, "r") as d:
+            directpath = d.readline().strip()
+            if not directpath:
+                directpath = direc_default
+                
+    else:
+        directpath = direc_default
+        if os.path.exists(direc):
+            with open (direc,"w") as w:
+                w.write(directpath)
+#function
+checkFolderDir()
+
+#image for slider            
+img_paths =[]
+
+#inserting file names into array
+#read notepad
+with open(direc,"r") as directname:
+    #link is string in notepad
+    for folder in directname:
+        folder = folder.strip()
+        if os.path.isdir(folder):
+            #list file names, array
+            dirlist = os.listdir(folder)
+            #directory name
+            strFolder = f"{folder}/"
+
+            theNewList = [strFolder + x for x in dirlist]
+            
+            img_paths.extend(theNewList)
+            
+        else:
+            print(f"Directory {folder} does not exist")
 
 
 # Function for opening the file explorer window
+listchange = False
 def browseFiles():
-    
+
     listchange= True 
     filename = filedialog.askdirectory()
     file_format = ['.png','.jpg','.webp']
     
+    img_paths.clear()
     
+    #overwrite letters in txt with filename
+    with open(direc,"w") as myFile:
+        myFile.write(filename)
+        
     for root, dirs, files in os.walk(filename):
         for file in files:
             path = os.path.join(root, file)
@@ -345,17 +405,20 @@ def browseFiles():
             
             #filtering out
             fileType = normalise[-4]+normalise[-3]+normalise[-2]+normalise[-1]
+            
             if fileType not in file_format:
                 continue
-            
+
             img_paths.append(normalise)
+
     
     image_insert()
-    
+
 def image_insert():
     global  img_button, color_imgP, photo_img,my_img0, photo_img3
     global my_label,current_index,photo_img5,my_label0,sqe_size,resized_images
     
+    #add filter out here?
     
     # Initialize a list to store the resized images
     resized_images = []
@@ -377,9 +440,10 @@ def image_insert():
     my_label = Label(image = resized_images[current_index], borderwidth =0, highlightbackground="white")
     my_label.grid(row = 2, column = 2, sticky='ew')
 
-    
+
 # functions
 image_insert()
 arrow_button()
 image_function()
 root.mainloop()
+
