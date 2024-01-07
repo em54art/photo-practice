@@ -393,7 +393,8 @@ def browseFiles():
     listchange= True 
     filename = filedialog.askdirectory()
     
-    img_paths.clear()
+    if not filename == '':
+        img_paths.clear()
     
     #overwrite letters in txt with filename
     with open(direc,"w") as myFile:
