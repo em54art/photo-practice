@@ -330,7 +330,7 @@ def example():
     label_file_explorer.grid(row=2, column=1)
 
 
-#direct path (unsure if needed)
+#create file name
 dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname,'default_pics')
 
@@ -363,7 +363,7 @@ checkFolderDir()
 
 #image for slider            
 img_paths =[]
-
+file_format = ['.png','.jpg','.webp']
 #inserting file names into array
 #read notepad
 with open(direc,"r") as directname:
@@ -376,7 +376,8 @@ with open(direc,"r") as directname:
             #directory name
             strFolder = f"{folder}/"
 
-            theNewList = [strFolder + x for x in dirlist]
+            #os.path.splitext(x)[1] get extension of x(file), if extension is in file_format add to list.
+            theNewList = [strFolder + x for x in dirlist if os.path.splitext(x)[1] in file_format]
             
             img_paths.extend(theNewList)
             
@@ -386,11 +387,11 @@ with open(direc,"r") as directname:
 
 # Function for opening the file explorer window
 listchange = False
+
 def browseFiles():
 
     listchange= True 
     filename = filedialog.askdirectory()
-    file_format = ['.png','.jpg','.webp']
     
     img_paths.clear()
     
@@ -398,17 +399,21 @@ def browseFiles():
     with open(direc,"w") as myFile:
         myFile.write(filename)
         
+    #goes through the directory
     for root, dirs, files in os.walk(filename):
         for file in files:
+            #makes full path
             path = os.path.join(root, file)
+            #removes double slashes
             normalise = os.path.normpath(path)
             
-            #filtering out
+            #extracts last four characters
             fileType = normalise[-4]+normalise[-3]+normalise[-2]+normalise[-1]
             
+            #checks if its in file_format. if not continue without executing
             if fileType not in file_format:
                 continue
-
+            #if it is continue appending
             img_paths.append(normalise)
 
     
@@ -418,15 +423,14 @@ def image_insert():
     global  img_button, color_imgP, photo_img,my_img0, photo_img3
     global my_label,current_index,photo_img5,my_label0,sqe_size,resized_images
     
-    #add filter out here?
-    
+
     # Initialize a list to store the resized images
     resized_images = []
     
     # size
     target_size = (500, 500)
     
-    #add resize 500,500 and add to array
+    #reads img_paths, add resize 500,500 and add to array
     for path in img_paths:
         img = Image.open(path)
         #optimise
