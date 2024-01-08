@@ -262,13 +262,14 @@ def image_function():
     button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='ne')
     return resized_images
 
-DragAndDrop_enabled = False
+DragAndDrop_enabled= None
 my_label0 = None
 
 def DragAndDrop_Img():
     global photo_img4, DragAndDrop_enabled, my_label0
+    print(DragAndDrop_enabled)
     
-    if DragAndDrop_enabled == True :
+    if DragAndDrop_enabled:
         
         # update the state of the variable
         DragAndDrop_enabled = False
@@ -277,10 +278,10 @@ def DragAndDrop_Img():
         button.destroy()
         label_file_explorer.destroy()
         frame1.destroy()
-        print('true')        
+        #print('False')
     else:
         DragAndDrop_enabled = True
-        print('false')
+        #print('True')
         example()
 
         
@@ -316,10 +317,7 @@ def example():
          
     #button
     button = customtkinter.CTkButton(frame1, text="Browse files",width=140, height=30,
-                                          border_color = '#9BE3F6', border_width = 2,
-                                          fg_color = 'white',
-                                          text_color = '#9BE3F6',
-                                          hover = False,command = browseFiles)
+                                          border_color = '#9BE3F6', border_width = 2,                               fg_color = 'white',                             text_color = '#9BE3F6',                               hover = False,command = browseFiles)
     button.grid(row=1, column=1)
     
     # Create a File Explorer label
@@ -344,7 +342,7 @@ direc_default = f"{filename}"
 
 #read from notepad and insert into img path
 def checkFolderDir():
-
+    
     #check if notepad exists, if not then add and write else check in notepad if path is correct and replace. 
     #only checks for notepad existance
     if os.path.isfile(direc) and os.path.getsize(direc) > 0:
@@ -389,7 +387,9 @@ with open(direc,"r") as directname:
 listchange = False
 
 def browseFiles():
-
+    global DragAndDrop_enabled
+    DragAndDrop_enabled = None
+    #print("False")
     listchange= True 
     filename = filedialog.askdirectory()
     
