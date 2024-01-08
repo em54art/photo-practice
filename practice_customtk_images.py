@@ -290,7 +290,6 @@ dragdrop_img = Image.open(r"python_pic\dragdropB.png")
 sqe_size = (30, 30)
 img_DD = dragdrop_img.resize(sqe_size)
 photo_img4 = ImageTk.PhotoImage(img_DD)
-#something is wrong with the button when clicking browse, something to do with skipping the changing to false
 #dragdrop button
 button_CP = Button(root, image= photo_img4,command = DragAndDrop_Img, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
 button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='nw')
@@ -434,8 +433,19 @@ def image_insert():
     #reads img_paths, add resize 500,500 and add to array
     for path in img_paths:
         img = Image.open(path)
-        #optimise
-        img = img.resize(target_size)
+
+        # Calculate aspect ratio
+        width_ratio = target_size[0]/img.width
+        height_ratio = target_size[1]/img.height
+        min_ratio = min(width_ratio, height_ratio)
+        
+        # Compute new dimensions
+        new_width = int(img.width * min_ratio)
+        new_height = int(img.height * min_ratio)
+
+        # Resize image
+        img = img.resize((new_width, new_height))
+        
         resized_images.append(ImageTk.PhotoImage(img))
     
     # Initialize current index to 0
