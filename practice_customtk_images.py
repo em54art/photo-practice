@@ -352,11 +352,26 @@ def checkFolderDir():
                 
     else:
         directpath = direc_default
-        if os.path.exists(direc):
-            with open (direc,"w") as w:
-                w.write(directpath)
+        with open (direc,"w") as w:
+            w.write(directpath)
 #function
 checkFolderDir()
+
+#check if notepad exists, if not then add and write else check in notepad if path is correct and replace. 
+#only checks for notepad existance
+if os.path.isfile(direc) and os.path.getsize(direc) > 0:
+    with open(direc, "r") as d:
+        directpath = d.readline().strip()
+        if not directpath:
+            directpath = direc_default
+            
+else:
+    directpath = direc_default
+    if os.path.exists(direc):
+        with open (direc,"w") as w:
+            w.write(directpath)
+
+
 
 #image for slider            
 img_paths =[]
