@@ -19,7 +19,7 @@ root = customtkinter.CTk()
 root.resizable(True, True)
 
 #remove title
-root.overrideredirect(True)
+root.overrideredirect(False)
 
 #colour
 root.configure(fg_color='white')
@@ -57,27 +57,27 @@ with open("colorsave.txt","r") as color_data_r:
 
 #---------title bar---------
 
-#drag and drop
-def move_app(e):
-    global x_offset, y_offset
-    x_offset = e.x
-    y_offset = e.y
-    root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
-
-def drag_app(e):
-    root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
+# #drag and drop
+# def move_app(e):
+#     global x_offset, y_offset
+#     x_offset = e.x
+#     y_offset = e.y
+#     root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
+# 
+# def drag_app(e):
+#     root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
 
 #title bar
 title_bar = Frame(root, bg= default_color,relief ='raised',bd = 0)
 title_bar.grid(row = 0, column = 0,columnspan=4, sticky='ew' )
 
-#bind title bar drag
-title_bar.bind('<ButtonPress-1>', move_app)
-title_bar.bind('<B1-Motion>', drag_app)
-
 #title bar color
 title_label = Label(title_bar, text='IMAGE', bg = default_color,fg = 'white',height = 2, font = 'Ariel 12', padx = 5)
 title_label.grid(row = 0, column = 0)
+
+#bind title bar drag
+# title_bar.bind('<ButtonPress-1>', move_app)
+# title_bar.bind('<B1-Motion>', drag_app)
 
 
 #------color click to reveal bar-------------------------------------------------
@@ -403,7 +403,6 @@ listchange = False
 def browseFiles():
     global DragAndDrop_enabled
     DragAndDrop_enabled = None
-    #print("False")
     listchange= True 
     filename = filedialog.askdirectory()
     
@@ -434,18 +433,19 @@ def browseFiles():
     
     image_insert()
 
+
+
 def image_insert():
     global  img_button, color_imgP, photo_img,my_img0, photo_img3
     global my_label,current_index,photo_img5,my_label0,sqe_size,resized_images
     
-
     # Initialize a list to store the resized images
     resized_images = []
     
     # size
     target_size = (500, 500)
     
-    #reads img_paths, add resize 500,500 and add to array
+
     for path in img_paths:
         img = Image.open(path)
 
@@ -461,13 +461,30 @@ def image_insert():
         # Resize image
         img = img.resize((new_width, new_height))
         
+        #insert into array
         resized_images.append(ImageTk.PhotoImage(img))
-    
+
     # Initialize current index to 0
     current_index = 0
     
+    
+    #image
+    my_img0 =Image.open(r"python_pic\background.png")
+    img5 = my_img0.resize(target_size)
+    photo_img5 = ImageTk.PhotoImage(img5)
+    
+    #adds temp img
+    my_label0 = Label(image= photo_img5, borderwidth=0, highlightbackground="white")
+    my_label0.grid(row=2, column=2, sticky='ew')
+    
+    # Add reference to prevent garbage collection
+    my_label0.image = photo_img5
+    # Create Frame
+    frame1 = Frame(root, background='white')
+    frame1.grid(row=2, column=2 )
+    
     #img shown
-    my_label = Label(image = resized_images[current_index], borderwidth =0, highlightbackground="white")
+    my_label = Label(frame1,image = resized_images[current_index], borderwidth =0, highlightbackground="white")
     my_label.grid(row = 2, column = 2, sticky='ew')
 
 
@@ -477,3 +494,5 @@ arrow_button()
 image_function()
 root.mainloop()
 
+#turn into exe
+# https://www.blog.pythonlibrary.org/2021/05/27/pyinstaller-how-to-turn-your-python-code-into-an-exe-on-windows/
