@@ -24,6 +24,5 @@ To gain experience in finishing a project.
 
 <h3>plans to add</h3>
 <ul>
-    <li>proper image resize (no static resize)</li>
     <li>import function that needs less time to import large amounts of data</li>
 </ul>
