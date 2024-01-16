@@ -8,10 +8,6 @@ import os
 import re
 from tkinter import filedialog
 
-#drag and drop var
-x_offset = 0
-y_offset = 0
-
 #-------------------root--------------------------------------------------
 root = customtkinter.CTk()
 
@@ -24,6 +20,26 @@ root.overrideredirect(False)
 #colour
 root.configure(fg_color='white')
 
+#drag and drop var
+# x_offset = 0
+# y_offset = 0
+
+# #drag and drop
+# def move_app(e):
+#     global x_offset, y_offset
+#     x_offset = e.x
+#     y_offset = e.y
+#     root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
+# 
+# def drag_app(e):
+#     root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
+
+
+
+# -------variables--------
+
+# Initialize a list to store the resized images
+resized_images = []
 
 #-----------------------file information--------------------------------------------  
 
@@ -54,31 +70,6 @@ with open("colorsave.txt","r") as color_data_r:
     color_data_RC = color_data_r.readline().strip()
     default_color = color_data_RC
     
-
-#---------title bar---------
-
-# #drag and drop
-# def move_app(e):
-#     global x_offset, y_offset
-#     x_offset = e.x
-#     y_offset = e.y
-#     root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
-# 
-# def drag_app(e):
-#     root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
-
-#title bar
-title_bar = Frame(root, bg= default_color,relief ='raised',bd = 0)
-title_bar.grid(row = 0, column = 0,columnspan=4, sticky='ew' )
-
-#title bar color
-title_label = Label(title_bar, text='IMAGE', bg = default_color,fg = 'white',height = 2, font = 'Ariel 12', padx = 5)
-title_label.grid(row = 0, column = 0)
-
-#bind title bar drag
-# title_bar.bind('<ButtonPress-1>', move_app)
-# title_bar.bind('<B1-Motion>', drag_app)
-
 
 #------color click to reveal bar-------------------------------------------------
 
@@ -129,6 +120,9 @@ def colorp_click():
             #changes title bar color
             title_bar.configure (bg = color_C)
             title_label.configure (bg = color_C)
+            
+            title_bar1.configure (bg = color_C)
+            title_label1.configure (bg = color_C)
     
         # bar slider
         bar_slider = customtkinter.CTkSlider(master=root, from_=255, to=0,
@@ -162,6 +156,30 @@ def colorp_click():
         # update initial background color of button
         my_upd(0)
 
+
+#---------title bar---------
+
+#title bar
+title_bar = Frame(root, bg= default_color,relief ='raised',bd = 0)
+title_bar.grid(row = 0, column = 0,columnspan=4, sticky='ew' )
+
+#title bar color
+title_label = Label(title_bar, bg = default_color,fg = 'white',height = 2, padx = 5)
+title_label.grid(row = 0, column = 0)
+
+#bottom bar
+title_bar1 = Frame(root, bg= default_color,relief ='raised',bd = 0)
+title_bar1.grid(row = 4, column = 0,columnspan=4, sticky='ew' )
+
+#bottom bar color
+title_label1 = Label(title_bar1, bg = default_color,fg = 'white',height = 2, padx = 5)
+title_label1.grid(row = 4, column = 0, sticky='s')
+
+#bind title bar drag
+# title_bar.bind('<ButtonPress-1>', move_app)
+# title_bar.bind('<B1-Motion>', drag_app)
+
+
 #-----------------arrow-------------------------
 def arrow_button():
     global arrow_imgR, arrow_imgL, button_AR, button_AL, my_label,photo_img1,photo_img2, resized_images
@@ -180,7 +198,6 @@ def arrow_button():
     
      #next arrowR code
     def forward():
-    
         global current_index, button_AR, button_AL, my_label
         
         # Increment current index
@@ -221,18 +238,14 @@ def arrow_button():
     button_AL.grid(row = 3, column = 2, padx = 50, pady =5, sticky='w')
     
 
-     
-
 #-------image-------
 def image_function():
-    
     #use global to allow access
     global color_imgP,photo_img3
     
     #button click to exit
     def button_click():
             exit()
-
     
     #icon color picker
     color_imgP =Image.open(r"python_pic\iconpaint.png")
@@ -262,26 +275,29 @@ def image_function():
     button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='ne')
     return resized_images
 
+
 DragAndDrop_enabled= None
 my_label0 = None
 
+def destroy_browsing():
+    global DragAndDrop_enabled, my_label0
+    my_label0.destroy()
+    button.destroy()
+    label_file_explorer.destroy()
+    frame1.destroy()
+
 def DragAndDrop_Img():
-    global photo_img4, DragAndDrop_enabled, my_label0
-    print(DragAndDrop_enabled)
+    global DragAndDrop_enabled
     
     if DragAndDrop_enabled:
-        
+
         # update the state of the variable
         DragAndDrop_enabled = False
-        
-        my_label0.destroy()
-        button.destroy()
-        label_file_explorer.destroy()
-        frame1.destroy()
-        #print('False')
+        destroy_browsing()
+
     else:
+
         DragAndDrop_enabled = True
-        #print('True')
         example()
 
         
@@ -290,14 +306,18 @@ dragdrop_img = Image.open(r"python_pic\dragdropB.png")
 sqe_size = (30, 30)
 img_DD = dragdrop_img.resize(sqe_size)
 photo_img4 = ImageTk.PhotoImage(img_DD)
+
 #dragdrop button
 button_CP = Button(root, image= photo_img4,command = DragAndDrop_Img, width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
 button_CP.grid(row = 1, column = 2,pady = 5, padx = 5, sticky='nw')
 
-#browse folder
+#size for photos
+target_size = (500,500)
+
+
+#browse folder img
 def example():
     global label_file_explorer,my_label0,button,label_file_explorer,frame1
-    target_size = (500,500)
 
     #image
     my_img0 =Image.open(r"python_pic\background.png")
@@ -310,13 +330,15 @@ def example():
     
     # Add reference to prevent garbage collection
     my_label0.image = photo_img5
+    
     # Create Frame
     frame1 = Frame(root, background='white')
     frame1.grid(row=2, column=2 )
          
     #button
     button = customtkinter.CTkButton(frame1, text="Browse files",width=140, height=30,
-                                          border_color = '#9BE3F6', border_width = 2,                               fg_color = 'white',                             text_color = '#9BE3F6',                               hover = False,command = browseFiles)
+                                    border_color = '#9BE3F6', border_width = 2,fg_color = 'white',
+                                     text_color = '#9BE3F6',hover = False,command = browseFiles)
     button.grid(row=1, column=1)
     
     # Create a File Explorer label
@@ -327,6 +349,7 @@ def example():
     label_file_explorer.grid(row=2, column=1)
 
 
+#--------------file pathing-----------------
 #create file name
 dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname,'default_pics')
@@ -341,41 +364,25 @@ direc_default = f"{filename}"
 
 #read from notepad and insert into img path
 def checkFolderDir():
-    
-    #check if notepad exists, if not then add and write else check in notepad if path is correct and replace. 
     #only checks for notepad existance
     if os.path.isfile(direc) and os.path.getsize(direc) > 0:
         with open(direc, "r") as d:
             directpath = d.readline().strip()
             if not directpath:
                 directpath = direc_default
-                
     else:
         directpath = direc_default
         with open (direc,"w") as w:
             w.write(directpath)
+    
+
 #function
 checkFolderDir()
 
-#check if notepad exists, if not then add and write else check in notepad if path is correct and replace. 
-#only checks for notepad existance
-if os.path.isfile(direc) and os.path.getsize(direc) > 0:
-    with open(direc, "r") as d:
-        directpath = d.readline().strip()
-        if not directpath:
-            directpath = direc_default
-            
-else:
-    directpath = direc_default
-    if os.path.exists(direc):
-        with open (direc,"w") as w:
-            w.write(directpath)
-
-
-
 #image for slider            
 img_paths =[]
-file_format = ['.png','.jpg','.webp']
+file_format = ['.png','.jpg']
+
 #inserting file names into array
 #read notepad
 with open(direc,"r") as directname:
@@ -396,56 +403,11 @@ with open(direc,"r") as directname:
         else:
             print(f"Directory {folder} does not exist")
 
+# Initialize current index to 0
+current_index = 0
 
-# Function for opening the file explorer window
-listchange = False
-
-def browseFiles():
-    global DragAndDrop_enabled
-    DragAndDrop_enabled = None
-    listchange= True 
-    filename = filedialog.askdirectory()
+def image_insert(array):
     
-    if not filename == '':
-        img_paths.clear()
-    
-    #overwrite letters in txt with filename
-    with open(direc,"w") as myFile:
-        myFile.write(filename)
-        
-    #goes through the directory
-    for root, dirs, files in os.walk(filename):
-        for file in files:
-            #makes full path
-            path = os.path.join(root, file)
-            #removes double slashes
-            normalise = os.path.normpath(path)
-            
-            #extracts last four characters
-            fileType = normalise[-4]+normalise[-3]+normalise[-2]+normalise[-1]
-            
-            #checks if its in file_format. if not continue without executing
-            if fileType not in file_format:
-                continue
-            #if it is continue appending
-            img_paths.append(normalise)
-
-    
-    image_insert()
-
-
-
-def image_insert():
-    global  img_button, color_imgP, photo_img,my_img0, photo_img3
-    global my_label,current_index,photo_img5,my_label0,sqe_size,resized_images
-    
-    # Initialize a list to store the resized images
-    resized_images = []
-    
-    # size
-    target_size = (500, 500)
-    
-
     for path in img_paths:
         img = Image.open(path)
 
@@ -462,37 +424,89 @@ def image_insert():
         img = img.resize((new_width, new_height))
         
         #insert into array
-        resized_images.append(ImageTk.PhotoImage(img))
+        array.append(ImageTk.PhotoImage(img))
 
-    # Initialize current index to 0
-    current_index = 0
+    
+
+
+
+# Function for opening the file explorer window
+listchange = False
+
+def browseFiles():
+    global DragAndDrop_enabled, resized_images,strFolder
+    resized_images = []
+    
+    DragAndDrop_enabled = None
+    listchange= True 
+    filename = filedialog.askdirectory()
     
     
+    if filename == '':
+        #read inside notepad
+        if strFolder.endswith('/'):
+            strFolder = strFolder[:-1]
+    else:
+        #overwrite letters in txt with filename
+        with open(direc,"w") as myFile:
+            myFile.write(filename)
+        strFolder = filename
+    
+    if len(img_paths) > 0 :
+        img_paths.clear()
+    
+    #goes through the directory
+    for root, dirs, files in os.walk(strFolder):
+        for file in files:
+            #makes full path
+            path = os.path.join(root, file)
+            #removes double slashes
+            normalise = os.path.normpath(path)
+            
+            #extracts last four characters
+            fileType = normalise[-4]+normalise[-3]+normalise[-2]+normalise[-1]
+            
+            #checks if its in file_format. if not continue without executing
+            if fileType not in file_format:
+                continue
+            #if it is continue appending img_path called in insert
+            img_paths.append(normalise)
+    
+    image_insert(resized_images)
+    destroy_browsing()
+
+
+def image_show():
+    global my_label,my_label0,frame1
+    #func
+    image_insert(resized_images)
+
     #image
     my_img0 =Image.open(r"python_pic\background.png")
     img5 = my_img0.resize(target_size)
     photo_img5 = ImageTk.PhotoImage(img5)
-    
+
     #adds temp img
     my_label0 = Label(image= photo_img5, borderwidth=0, highlightbackground="white")
     my_label0.grid(row=2, column=2, sticky='ew')
-    
+
     # Add reference to prevent garbage collection
     my_label0.image = photo_img5
+
     # Create Frame
     frame1 = Frame(root, background='white')
     frame1.grid(row=2, column=2 )
-    
+
     #img shown
     my_label = Label(frame1,image = resized_images[current_index], borderwidth =0, highlightbackground="white")
     my_label.grid(row = 2, column = 2, sticky='ew')
 
 
 # functions
-image_insert()
+image_show()
 arrow_button()
 image_function()
 root.mainloop()
-
+#compare the current code with past code
 #turn into exe
 # https://www.blog.pythonlibrary.org/2021/05/27/pyinstaller-how-to-turn-your-python-code-into-an-exe-on-windows/
