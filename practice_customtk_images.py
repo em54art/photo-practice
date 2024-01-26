@@ -29,7 +29,7 @@ final_array = []
 root = customtkinter.CTk()
 
 #resize
-root.resizable(True, True)
+root.resizable(0, 0)
 
 #remove title
 root.overrideredirect(False)
