@@ -7,7 +7,9 @@ from pathlib import Path
 import os
 import re
 from tkinter import filedialog
+from tkinter import messagebox
 
+listchange = False
 sqe_size = (30, 30)
 batch_size = 3
 current_index = 0
@@ -592,9 +594,11 @@ def img_load2(full_batchlist, check_array,appended_list):
 
         print('not changed')
 
-# Function for opening the file explorer window
-listchange = False
+#popup error message
+def popup_error():
+    messagebox.showerror("Error", "There are no images in this folder")
 
+# Function for opening the file explorer window
 def browseFiles():
     global DragAndDrop_enabled, final_array,strFolder,check_array,appended_list
     global img_batchlist,img_paths,final_array,current_findex
@@ -666,10 +670,9 @@ def browseFiles():
             current_findex = 0
         
         destroy_browsing()
+        popup_error()
         image_show()
         
-        
-
     else:
         #does the data processing again
         batch_processing()
