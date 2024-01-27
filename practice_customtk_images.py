@@ -414,6 +414,27 @@ direc = "direct.txt"
 #info in txt, if new
 direc_default = f"{filename}"
 
+def check_imgfolder(direc_default):
+    if not img_paths:
+        print(img_paths)
+        with open(direc,"w") as d:
+            d.write(direc_default)
+        
+        with open(direc,"r") as directname:
+            #link is string in notepad
+            for folder in directname:
+                folder = folder.strip()
+                if os.path.isdir(folder):
+                    #list file names, array
+                    dirlist = os.listdir(folder)
+                    #directory name
+                    strFolder = f"{folder}/"
+
+                    #os.path.splitext(x)[1] get extension of x(file), if extension is in file_format add to list.
+                    theNewList = [strFolder + x for x in dirlist if os.path.splitext(x)[1] in file_format]
+                    
+                    img_paths.extend(theNewList)
+
 #read from notepad and insert into img path
 def checkFolderDir():
     #only checks for notepad existance
@@ -489,9 +510,12 @@ with open(direc,"r") as directname:
             theNewList = [strFolder + x for x in dirlist if os.path.splitext(x)[1] in file_format]
             
             img_paths.extend(theNewList)
+            check_imgfolder(direc_default)
             
         else:
             print(f"Directory {folder} does not exist")
+
+
 
 def batch_processing():
     #shove batch in imgbatchlist
@@ -578,6 +602,13 @@ def browseFiles():
     listchange= True 
     filename = filedialog.askdirectory()
     
+    #old filename in txt
+    old_filename = []
+    with open (direc, "r") as d:
+        for item in d:
+            old_filename.append(item)
+    ofilename = f'{old_filename[0]}'
+    
     if filename == '':
         #read inside notepad
         if strFolder.endswith('/'):
@@ -598,33 +629,59 @@ def browseFiles():
         
     else:
         print('not clear')
-        
-    #goes through the directory
-    for root, dirs, files in os.walk(strFolder):
-        for file in files:
-            #makes full path
-            path = os.path.join(root, file)
-            #removes double slashes
-            normalise = os.path.normpath(path)
-            
-            #extracts last four characters
-            fileType = normalise[-4]+normalise[-3]+normalise[-2]+normalise[-1]
-            
-            #checks if its in file_format. if not continue without executing
-            if fileType not in file_format:
-                continue
-            #if it is continue appending final array called in insert
-            img_paths.append(normalise)
     
-    #does the data processing again
-    batch_processing()
-    img_load1(img_batchlist,check_array,appended_list)
-    #image process
-    image_insert(final_array,appended_list)
-    if current_findex > 0:
-        current_findex = 0
-    destroy_browsing()
-    image_show()
+    def appending(strFolder):
+        #goes through the directory
+        for root, dirs, files in os.walk(strFolder):
+            for file in files:
+                #makes full path
+                path = os.path.join(root, file)
+                #removes double slashes
+                normalise = os.path.normpath(path)
+                
+                #extracts last four characters
+                fileType = normalise[-4]+normalise[-3]+normalise[-2]+normalise[-1]
+                
+                #checks if its in file_format. if not continue without executing
+                if fileType not in file_format:
+                    continue
+                #if it is continue appending final array called in insert
+                img_paths.append(normalise)
+    
+    appending(strFolder)
+    
+    #check img-paths
+    if not img_paths:
+        print('nothing')
+        appending(ofilename)
+        
+        #does the data processing again
+        batch_processing()
+        img_load1(img_batchlist,check_array,appended_list)
+        
+        #image process
+        image_insert(final_array,appended_list)
+        
+        if current_findex > 0:
+            current_findex = 0
+        
+        destroy_browsing()
+        image_show()
+        
+        
+
+    else:
+        #does the data processing again
+        batch_processing()
+        img_load1(img_batchlist,check_array,appended_list)
+        #image process
+        image_insert(final_array,appended_list)
+        #resets to start
+        if current_findex > 0:
+            current_findex = 0
+        
+        destroy_browsing()
+        image_show()
 
 
 def image_show():
