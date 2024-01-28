@@ -22,7 +22,4 @@ for installation and documentation</p>
 To gain experience in finishing a project.
 </p>
 
-<h3>plans to add</h3>
-<ul>
-    <li>import function that needs less time to import large amounts of data</li>
-</ul>
+
