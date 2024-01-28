@@ -1,5 +1,5 @@
-#avoid using * if you know what to specifically use
-from tkinter import *
+
+from tkinter import Label,Button,Frame,HORIZONTAL
 import customtkinter
 # import image
 from PIL import ImageTk, Image, ImageOps
@@ -8,7 +8,12 @@ import os
 import re
 from tkinter import filedialog
 from tkinter import messagebox
+import sys
 
+# -------variables--------
+
+# Initialize a list to store the resized images
+resized_images = []
 listchange = False
 sqe_size = (30, 30)
 batch_size = 3
@@ -39,26 +44,9 @@ root.overrideredirect(False)
 #colour
 root.configure(fg_color='white')
 
-#drag and drop var
-# x_offset = 0
-# y_offset = 0
+root.iconbitmap('logoimg.ico')
 
-# #drag and drop
-# def move_app(e):
-#     global x_offset, y_offset
-#     x_offset = e.x
-#     y_offset = e.y
-#     root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
-# 
-# def drag_app(e):
-#     root.geometry(f'+{e.x_root-x_offset}+{e.y_root-y_offset}')
-
-
-
-# -------variables--------
-
-# Initialize a list to store the resized images
-resized_images = []
+root.title('photo slider')
 
 #-----------------------file information--------------------------------------------  
 
@@ -297,7 +285,7 @@ def image_function():
     
     #button click to exit
     def button_click():
-            exit()
+            sys.exit()
     
     #icon color picker
     color_imgP =Image.open(r"python_pic\iconpaint.png")
@@ -516,6 +504,25 @@ with open(direc,"r") as directname:
             
         else:
             print(f"Directory {folder} does not exist")
+            
+            with open(direc,"w") as newfile:
+                newfile.write(f"{filename}")
+            
+            with open(direc,"r") as directname:
+                #link is string in notepad
+                for folder in directname:
+                    folder = folder.strip()
+                    if os.path.isdir(folder):
+                        #list file names, array
+                        dirlist = os.listdir(folder)
+                        #directory name
+                        strFolder = f"{folder}/"
+
+                        #os.path.splitext(x)[1] get extension of x(file), if extension is in file_format add to list.
+                        theNewList = [strFolder + x for x in dirlist if os.path.splitext(x)[1] in file_format]
+                        
+                        img_paths.extend(theNewList)
+                        check_imgfolder(direc_default)
 
 
 
