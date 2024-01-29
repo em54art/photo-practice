@@ -9,6 +9,9 @@ import re
 from tkinter import filedialog
 from tkinter import messagebox
 import sys
+import subprocess
+
+
 
 # -------variables--------
 
@@ -182,16 +185,12 @@ title_bar1.grid(row = 4, column = 0,columnspan=4, sticky='ew' )
 title_label1 = Label(title_bar1, bg = default_color,fg = 'white',height = 2, padx = 5)
 title_label1.grid(row = 4, column = 0, sticky='s')
 
-#bind title bar drag
-# title_bar.bind('<ButtonPress-1>', move_app)
-# title_bar.bind('<B1-Motion>', drag_app)
 
 #------------
 
 #back arrowL code
 def back(full_batchlist):
     global current_index,current_array,current_findex,final_array
-    print('back')
     # reduce current index
     current_index -= 1
     current_findex -= 1
@@ -217,7 +216,6 @@ def back(full_batchlist):
 #next arrowR code
 def forward(full_batchlist):
     global current_index, current_array, current_findex,final_array
-    print('next')
     # Increment current index
     current_index += 1
     current_findex += 1
@@ -390,13 +388,16 @@ def example():
 
 
 #--------------file pathing-----------------
+#executable
+if getattr(sys, 'frozen', False):
+    # we are running in a bundle
+    frozen = 'ever so'
+    dirname = os.getcwd()
+else:
+    #create file name
+    dirname = os.path.dirname(__file__)
 
-
-#create file name
-dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname,'default_pics')
-
-#add name after default pic dir and insert into img array
 
 #name of txt
 direc = "direct.txt"
@@ -404,6 +405,7 @@ direc = "direct.txt"
 #info in txt, if new
 direc_default = f"{filename}"
 
+#add name after default pic dir and insert into img array
 def check_imgfolder(direc_default):
     if not img_paths:
         print(img_paths)
@@ -463,7 +465,7 @@ def image_insert(array,flat):
         
         #insert into array
         array.append(ImageTk.PhotoImage(img))
-        print('insert')
+
     
     
     
@@ -540,10 +542,8 @@ def delete_arrowR():
     batch_math = batch_size * final_length - batch_size + (final_batch - 1)
 
     if current_findex == batch_math:
-        print('True2')
         return button_AR.destroy()
     else:
-        print('false')
         button_AR = Button(root, image= photo_img1, command= lambda:forward(img_batchlist), width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
         button_AR.grid(row = 3, column = 2, padx = 50, pady =5,sticky='e')
 
@@ -553,10 +553,10 @@ def destroylb():
     
     #destroy only on the first image, keep bool
     if current_findex == 0:
-        print('true')
+
         button_AL.destroy()
     else:
-        print('false')
+
         button_AL = Button(root, image= photo_img2, command=lambda: back(img_batchlist), width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
         button_AL.grid(row = 3, column = 2, padx = 50, pady =5, sticky='w')
 
@@ -582,8 +582,7 @@ def img_load2(full_batchlist, check_array,appended_list):
     global change_array, final_array, current_array, img_loaded
     img_loaded =False 
 
-    print(f'current:{current_array} change: {change_array}')
-    
+        
     #if current array changes load in the array appended_list(check what is happening)
     if current_array != change_array:
         if current_array in check_array:
@@ -663,7 +662,6 @@ def browseFiles():
     
     #check img-paths
     if not img_paths:
-        print('nothing')
         appending(ofilename)
         
         #does the data processing again
