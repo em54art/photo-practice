@@ -1,7 +1,5 @@
-
 from tkinter import Label,Button,Frame,HORIZONTAL
 import customtkinter
-# import image
 from PIL import ImageTk, Image, ImageOps
 from pathlib import Path
 import os
@@ -443,6 +441,7 @@ def checkFolderDir():
 
 #function
 checkFolderDir()
+
 #when going the back array the current array isn't equal to appendedlist
 def image_insert(array,flat):
     global current_array, current_findex
@@ -542,7 +541,7 @@ def delete_arrowR():
     batch_math = batch_size * final_length - batch_size + (final_batch - 1)
 
     if current_findex == batch_math:
-        return button_AR.destroy()
+        button_AR.destroy()
     else:
         button_AR = Button(root, image= photo_img1, command= lambda:forward(img_batchlist), width=30, height=30, borderwidth=0, highlightthickness=0, bg="white")
         button_AR.grid(row = 3, column = 2, padx = 50, pady =5,sticky='e')
@@ -553,7 +552,6 @@ def destroylb():
     
     #destroy only on the first image, keep bool
     if current_findex == 0:
-
         button_AL.destroy()
     else:
 
@@ -563,18 +561,21 @@ def destroylb():
 
 
 img_loaded =False 
+
 #load first batch (image insert array is used on the first batch)
 def img_load1(full_batchlist,check_array,appended_list):
-    global final_array, img_loaded
-    img_loaded =True 
+    global final_array, img_loaded, current_array
+    img_loaded =True
+    print(f'current array: {current_array}\nfull batchlist:{full_batchlist}')
+    if current_array > 0:
+        current_array=0
+        
     appended_list.append(full_batchlist[current_array])
     check_array.append(current_array)
+    
     image_insert(final_array,appended_list)
     
     
-
-
-
 img_load1(img_batchlist,check_array,appended_list)
 
 
@@ -608,19 +609,20 @@ def popup_error():
 def browseFiles():
     global DragAndDrop_enabled, final_array,strFolder,check_array,appended_list
     global img_batchlist,img_paths,final_array,current_findex
+    
     DragAndDrop_enabled = None
     listchange= True 
     filename = filedialog.askdirectory()
     
-    #old filename in txt
+    #old filename in txt, for no images in folder
     old_filename = []
     with open (direc, "r") as d:
         for item in d:
             old_filename.append(item)
     ofilename = f'{old_filename[0]}'
     
+    
     if filename == '':
-        #read inside notepad
         if strFolder.endswith('/'):
             strFolder = strFolder[:-1]
     else:
@@ -662,32 +664,39 @@ def browseFiles():
     
     #check img-paths
     if not img_paths:
+        print('run1')
+        print(appended_list)
         appending(ofilename)
         
         #does the data processing again
         batch_processing()
         img_load1(img_batchlist,check_array,appended_list)
-        
         #image process
-        image_insert(final_array,appended_list)
         
+        image_insert(final_array,appended_list)
+        print(final_array)
         if current_findex > 0:
             current_findex = 0
-        
+        delete_arrowR()
         destroy_browsing()
         popup_error()
         image_show()
         
     else:
         #does the data processing again
+        print('run2')
         batch_processing()
+        #img_load1 out of index problem
+        #check array and appended array isn't the problem
         img_load1(img_batchlist,check_array,appended_list)
+        
         #image process
         image_insert(final_array,appended_list)
+        print(final_array)
         #resets to start
         if current_findex > 0:
             current_findex = 0
-        
+        delete_arrowR()
         destroy_browsing()
         image_show()
 
@@ -714,16 +723,13 @@ def image_show():
     #img shown
     my_label = Label(frame1,image = final_array[current_findex], borderwidth =0, highlightbackground="white")
     my_label.grid(row = 2, column = 2, sticky='ew')
+    print(current_findex)
     
-
-
 # functions
 image_show()
 arrow_button()
 arrow_buttonR()
 image_function()
 root.mainloop()
-#compare the current code with past code
-#turn into exe
-# https://www.blog.pythonlibrary.org/2021/05/27/pyinstaller-how-to-turn-your-python-code-into-an-exe-on-windows/
+
 
