@@ -569,6 +569,7 @@ def img_load1(full_batchlist,check_array,appended_list):
     print(f'current array: {current_array}\nfull batchlist:{full_batchlist}')
     if current_array > 0:
         current_array=0
+        delete_arrowR()
         
     appended_list.append(full_batchlist[current_array])
     check_array.append(current_array)
@@ -677,7 +678,7 @@ def browseFiles():
         print(final_array)
         if current_findex > 0:
             current_findex = 0
-        delete_arrowR()
+        
         destroy_browsing()
         popup_error()
         image_show()
@@ -689,14 +690,12 @@ def browseFiles():
         #img_load1 out of index problem
         #check array and appended array isn't the problem
         img_load1(img_batchlist,check_array,appended_list)
-        
         #image process
         image_insert(final_array,appended_list)
         print(final_array)
         #resets to start
         if current_findex > 0:
             current_findex = 0
-        delete_arrowR()
         destroy_browsing()
         image_show()
 
