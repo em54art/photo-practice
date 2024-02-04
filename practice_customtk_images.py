@@ -752,6 +752,3 @@ arrow_button()
 arrow_buttonR()
 image_function()
 root.mainloop()
-
-
-
