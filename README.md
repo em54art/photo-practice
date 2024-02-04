@@ -7,7 +7,9 @@
 <h3>How to run it in the current version?</h3>
 
 <p>have CustomTkinter installed in the python version<br>
-https://customtkinter.tomschimansky.com/documentation/<br>
+https://customtkinter.tomschimansky.com/documentation/
+or download zip folder click the .exe
+<br>
 for installation and documentation</p>
 
 <h3>What can the software do?</h3>
