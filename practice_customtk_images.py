@@ -536,6 +536,7 @@ batch_processing()
 
 def delete_arrowR():
     global button_AR,final_length ,final_batch,batch_math
+    
     final_length = len(img_batchlist)
     final_batch = len(img_batchlist[-1])
     batch_math = batch_size * final_length - batch_size + (final_batch - 1)
@@ -566,14 +567,12 @@ img_loaded =False
 def img_load1(full_batchlist,check_array,appended_list):
     global final_array, img_loaded, current_array
     img_loaded =True
-    print(f'current array: {current_array}\nfull batchlist:{full_batchlist}')
+    
     if current_array > 0:
         current_array=0
-        delete_arrowR()
-        
+    
     appended_list.append(full_batchlist[current_array])
     check_array.append(current_array)
-    
     image_insert(final_array,appended_list)
     
     
@@ -590,11 +589,14 @@ def img_load2(full_batchlist, check_array,appended_list):
         if current_array in check_array:
             print('do nothing')
         else:
-            
+   
             #append to appendedlist
             appended_list.append(full_batchlist[current_array])
+            print(f'current array:{current_array}')
             #append number to check
             check_array.append(current_array)
+            
+            print(f'appendedlist:{appended_list}')
             #insert the appended_list again
             image_insert(final_array,appended_list)
             
@@ -676,9 +678,10 @@ def browseFiles():
         
         image_insert(final_array,appended_list)
         print(final_array)
+        
         if current_findex > 0:
             current_findex = 0
-        
+        destroylb()
         destroy_browsing()
         popup_error()
         image_show()
@@ -686,16 +689,29 @@ def browseFiles():
     else:
         #does the data processing again
         print('run2')
-        batch_processing()
-        #img_load1 out of index problem
-        #check array and appended array isn't the problem
-        img_load1(img_batchlist,check_array,appended_list)
-        #image process
-        image_insert(final_array,appended_list)
-        print(final_array)
+        
+        print(f'old filename:{ofilename}\nnew filename:{strFolder}')
+        
+        if ofilename == strFolder:
+            #old filename
+            batch_processing()
+            #load first batch
+            img_load1(img_batchlist,check_array,appended_list)
+            print(f'appendedlist:{appended_list}')
+        else:
+            #new filename
+            batch_processing()
+            #load first batch
+            img_load1(img_batchlist,check_array,appended_list)
+            #image process
+            image_insert(final_array,appended_list)
+            
         #resets to start
-        if current_findex > 0:
+        if current_findex > 0 or current_findex < 0:
             current_findex = 0
+        
+        destroylb()
+        delete_arrowR()
         destroy_browsing()
         image_show()
 
@@ -722,6 +738,7 @@ def image_show():
     #img shown
     my_label = Label(frame1,image = final_array[current_findex], borderwidth =0, highlightbackground="white")
     my_label.grid(row = 2, column = 2, sticky='ew')
+    print(f'current array:{current_array}')
     print(current_findex)
     
 # functions
@@ -730,5 +747,3 @@ arrow_button()
 arrow_buttonR()
 image_function()
 root.mainloop()
-
-
