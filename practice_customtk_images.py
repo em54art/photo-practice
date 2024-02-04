@@ -141,7 +141,6 @@ def colorp_click():
                                              progress_color = '#9BE3F6',
                                              button_color = '#5353c6',
                                              command=my_upd)
-        
 
         bar_slider.grid(row=1, column=2, padx=40, pady=2, sticky='e')
     
@@ -218,9 +217,14 @@ def forward(full_batchlist):
     current_index += 1
     current_findex += 1
     
+    print(f'current array ar:{current_array}')
+    print(f'full batchlist: {full_batchlist}')
+    print(f'current index:{current_index}')
+    print(f'length of batch list: {len(full_batchlist[current_array])}')
     if current_index >= len(full_batchlist[current_array]):
         current_array += 1
         current_index = 0
+        print('increase current array')
         
 
     if current_array == len(full_batchlist):
@@ -589,16 +593,17 @@ def img_load2(full_batchlist, check_array,appended_list):
         if current_array in check_array:
             print('do nothing')
         else:
-   
+            print(f'final array:{final_array}')
             #append to appendedlist
             appended_list.append(full_batchlist[current_array])
-            print(f'current array:{current_array}')
             #append number to check
             check_array.append(current_array)
-            
+            print(f'current array: {current_array}')
             print(f'appendedlist:{appended_list}')
             #insert the appended_list again
+            
             image_insert(final_array,appended_list)
+            print(f'final array:{final_array}')
             
     else:
 
@@ -611,7 +616,7 @@ def popup_error():
 # Function for opening the file explorer window
 def browseFiles():
     global DragAndDrop_enabled, final_array,strFolder,check_array,appended_list
-    global img_batchlist,img_paths,final_array,current_findex
+    global img_batchlist,img_paths,final_array,current_findex, current_index
     
     DragAndDrop_enabled = None
     listchange= True 
@@ -689,9 +694,8 @@ def browseFiles():
     else:
         #does the data processing again
         print('run2')
-        
-        print(f'old filename:{ofilename}\nnew filename:{strFolder}')
-        
+        current_index = 0
+        print(f'current index:{current_index}')
         if ofilename == strFolder:
             #old filename
             batch_processing()
@@ -699,12 +703,14 @@ def browseFiles():
             img_load1(img_batchlist,check_array,appended_list)
             print(f'appendedlist:{appended_list}')
         else:
+            print(f'________\nfinal array:{final_array}')
             #new filename
             batch_processing()
             #load first batch
             img_load1(img_batchlist,check_array,appended_list)
             #image process
-            image_insert(final_array,appended_list)
+            #image_insert(final_array,appended_list)
+            print(f'________\nfinal array:{final_array}')
             
         #resets to start
         if current_findex > 0 or current_findex < 0:
@@ -739,7 +745,6 @@ def image_show():
     my_label = Label(frame1,image = final_array[current_findex], borderwidth =0, highlightbackground="white")
     my_label.grid(row = 2, column = 2, sticky='ew')
     print(f'current array:{current_array}')
-    print(current_findex)
     
 # functions
 image_show()
@@ -747,3 +752,6 @@ arrow_button()
 arrow_buttonR()
 image_function()
 root.mainloop()
+
+
+
